@@ -20,7 +20,7 @@ class Sample : AppCompatActivity() {
         const val CHOICE_DELAY_TIME = 2000L
         const val TIME_UP_DELAY_TIME = 1500L
         var count = 0
-        var s = 0
+        var s = 1
         var ok = 0
         var ans = ""
         var text = ""
