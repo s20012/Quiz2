@@ -47,12 +47,21 @@ class Sample : AppCompatActivity() {
                     count++
                     text = findViewById<RadioButton>(id).text as String
                     if (text == ans) {
-                        next()
-                        ok++
-                        readData(s)
+                        AlertDialog.Builder(this)
+                            .setTitle("正解！")
+                            .setPositiveButton("次へ") {_, _ ->
+                                ok++
+                                next()
+                            }
+                            .show()
+
                     } else {
-                        next()
-                        readData(s)
+                        AlertDialog.Builder(this)
+                            .setTitle("不正解...")
+                            .setPositiveButton("次へ") {_, _ ->
+                                next()
+                            }
+                            .show()
                     }
             }
 
@@ -178,10 +187,12 @@ class Sample : AppCompatActivity() {
             val intent = Intent(this, Result::class.java)
             startActivity(intent)
             finish()
+        } else {
+            s = (0..74).random()
+            binding.radioGroup.clearCheck()
+            binding.radioE.visibility = View.VISIBLE
+            binding.radioF.visibility = View.VISIBLE
+            readData(s)
         }
-        s = (0..74).random()
-        binding.radioGroup.clearCheck()
-        binding.radioE.visibility = View.VISIBLE
-        binding.radioF.visibility = View.VISIBLE
     }
 }
