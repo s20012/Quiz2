@@ -2,29 +2,36 @@ package jp.ac.it_college.s20012.apisample
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+
 import android.content.Intent
+import android.os.*
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.CountDownTimer
 import android.view.View
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import jp.ac.it_college.s20012.apisample.databinding.ActivitySampleBinding
+
 
 class Sample : AppCompatActivity() {
     private lateinit var binding: ActivitySampleBinding
     private val helper = Database(this)
+    private var timeLeftCountdown = TimeLeftCountdown()
+    private var startTime = 0L
+    private var totalElapsedTime = 0L
+    private val currentElapsedTime = SystemClock.elapsedRealtime() - startTime
+
     companion object {
         const val TIME_LIMIT = 10000L
         const val TIMER_INTERVAL = 100L
-        const val CHOICE_DELAY_TIME = 2000L
-        const val TIME_UP_DELAY_TIME = 1500L
         var count = 0
-        var s = 1
+        var num = 1
         var ok = 0
         var ans = ""
         var text = ""
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,24 +39,23 @@ class Sample : AppCompatActivity() {
         binding = ActivitySampleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        readData(s)
-
-        TimeLeftCountdown()
-        binding.button.setOnClickListener {
-            val id = binding.radioGroup.checkedRadioButtonId
+        readData(num)
+        if(count == 0) {
+            timeLeftCountdown.start()
+        }
+            binding.button.setOnClickListener {
+                totalElapsedTime += currentElapsedTime
+                Log.d("TIME", totalElapsedTime.toString())
+                val id = binding.radioGroup.checkedRadioButtonId
                 if (id == -1) {
-                    AlertDialog.Builder(this)
-                        .setTitle("ちょっと待って！")
-                        .setMessage("ボタンが押されてないよ")
-                        .setPositiveButton("OK", null)
-                        .show()
+                    Toast.makeText(this ,"ボタンが押されてないよ!", Toast.LENGTH_SHORT).show()
                 } else {
-                    count++
+                    timeLeftCountdown.cancel()
                     text = findViewById<RadioButton>(id).text as String
                     if (text == ans) {
                         AlertDialog.Builder(this)
                             .setTitle("正解！")
-                            .setPositiveButton("次へ") {_, _ ->
+                            .setPositiveButton("次へ") { _, _ ->
                                 ok++
                                 next()
                             }
@@ -58,16 +64,22 @@ class Sample : AppCompatActivity() {
                     } else {
                         AlertDialog.Builder(this)
                             .setTitle("不正解...")
-                            .setPositiveButton("次へ") {_, _ ->
+                            .setPositiveButton("次へ") { _, _ ->
                                 next()
                             }
                             .show()
                     }
+                }
             }
 
-
-        }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timeLeftCountdown.cancel()
+
+    }
+
 
     //読み込み
     @SuppressLint("Recycle", "SetTextI18n")
@@ -153,27 +165,29 @@ class Sample : AppCompatActivity() {
                     binding.radioF.text = random2[5]
                 }
             }
-
         }
+
     }
 
-    /**
-     * 制限時間をカウントダウンするタイマー
-     */
+
     inner class TimeLeftCountdown : CountDownTimer(TIME_LIMIT, TIMER_INTERVAL) {
         override fun onTick(millisUntilFinished: Long) {
             animateToProgress(millisUntilFinished.toInt())
         }
 
         override fun onFinish() {
+            totalElapsedTime += TIME_LIMIT
             animateToProgress(0)
+            AlertDialog.Builder(this@Sample)
+                .setTitle("時間切れ...")
+                .setPositiveButton("次へ") { _, _ ->
+                    readData(num)
+                    next()
+                }
+                .show()
 
         }
 
-        /**
-         * API Level 24 であれば、ProgressBar 自体にアニメーションのパラメータがありますが
-         * 今回は 23 なので、ObjectAnimator を使って実装
-         */
         private fun animateToProgress(progress: Int) {
             val anim = ObjectAnimator.ofInt(binding.timeLeftBar, "progress", progress)
             anim.duration = TIMER_INTERVAL
@@ -183,16 +197,30 @@ class Sample : AppCompatActivity() {
 
 
     private fun next() {
+        count++
         if(count == 10) {
+            count = 0
             val intent = Intent(this, Result::class.java)
+                intent.apply {
+                    putExtra("ANSWER", ok)
+                    putExtra("TIME", totalElapsedTime)
+                }
+            ok = 0
             startActivity(intent)
             finish()
+
         } else {
-            s = (0..74).random()
+            timeLeftCountdown.cancel()
+            binding.timeLeftBar.progress = 10000
+            num = (0..74).random()
             binding.radioGroup.clearCheck()
             binding.radioE.visibility = View.VISIBLE
             binding.radioF.visibility = View.VISIBLE
-            readData(s)
+            readData(num)
+            timeLeftCountdown.start()
+            startTime = SystemClock.elapsedRealtime()
         }
     }
 }
+
+

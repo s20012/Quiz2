@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         communication(url)
 
-        binding.button2.setOnClickListener {
+        binding.next.setOnClickListener {
             val intent = Intent(this, Sample::class.java)
             startActivity(intent)
             finish()
@@ -86,11 +86,11 @@ class MainActivity : AppCompatActivity() {
                 val db = helper.writableDatabase
                 val sqlDelete = """
                 DELETE FROM Test1
-            """.trimIndent()
+                """.trimIndent()
                 var stmt = db.compileStatement(sqlDelete)
                 stmt.executeUpdateDelete()
 
-                for(i in 0..74) {
+                for(i in 0..149) {
                     val name = rootJSON.getJSONObject(i) //問題指定
                     id = name.getString("id")
                     question = name.getString("question")
