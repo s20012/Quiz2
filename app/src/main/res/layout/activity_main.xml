@@ -14,7 +14,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qize" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
+
+    <NumberPicker
+        android:id="@+id/numPicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/qize"
@@ -23,8 +34,27 @@
         android:text="クイズアプリ"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="35sp"
-        app:layout_constraintBottom_toTopOf="@+id/next"
+        app:layout_constraintBottom_toTopOf="@+id/numPicker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="出題数"
+        app:layout_constraintBottom_toBottomOf="@+id/numPicker"
+        app:layout_constraintEnd_toStartOf="@+id/numPicker"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/numPicker" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="487dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

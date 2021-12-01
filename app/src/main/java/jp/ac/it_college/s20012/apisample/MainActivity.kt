@@ -41,8 +41,16 @@ class MainActivity : AppCompatActivity() {
 
         communication(url)
 
+        binding.numPicker.apply {
+            maxValue = 50
+            minValue = 10
+
+        }
+
         binding.next.setOnClickListener {
+            println(binding.numPicker.value)
             val intent = Intent(this, Sample::class.java)
+            intent.putExtra("NUM", binding.numPicker.value)
             startActivity(intent)
             finish()
         }
@@ -53,7 +61,6 @@ class MainActivity : AppCompatActivity() {
     //取得したAPIデータをデータベースに書き込み
     @SuppressWarnings("SameParameterValue")
     private fun communication(urlFull: String) {
-
         val handler = HandlerCompat.createAsync(mainLooper)
         val executeService = Executors.newSingleThreadExecutor()
 

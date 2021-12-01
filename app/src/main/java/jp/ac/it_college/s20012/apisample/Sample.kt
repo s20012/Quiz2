@@ -20,7 +20,7 @@ class Sample : AppCompatActivity() {
     private var timeLeftCountdown = TimeLeftCountdown()
     private var startTime = 0L
     private var totalElapsedTime = 0L
-    private val currentElapsedTime = SystemClock.elapsedRealtime() - startTime
+    private var question = 0
 
     companion object {
         const val TIME_LIMIT = 10000L
@@ -39,12 +39,12 @@ class Sample : AppCompatActivity() {
         binding = ActivitySampleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        question = intent.getIntExtra("NUM", 0)
         readData(num)
         if(count == 0) {
             timeLeftCountdown.start()
         }
             binding.button.setOnClickListener {
-                totalElapsedTime += currentElapsedTime
                 Log.d("TIME", totalElapsedTime.toString())
                 val id = binding.radioGroup.checkedRadioButtonId
                 if (id == -1) {
@@ -155,6 +155,7 @@ class Sample : AppCompatActivity() {
                     binding.radioE.visibility = View.GONE
                     binding.radioF.visibility = View.GONE
 
+
                 }
                 else -> {
                     binding.radioA.text = random2[0]
@@ -198,12 +199,12 @@ class Sample : AppCompatActivity() {
 
     private fun next() {
         count++
-        if(count == 10) {
+        if(count == question) {
             count = 0
             val intent = Intent(this, Result::class.java)
                 intent.apply {
                     putExtra("ANSWER", ok)
-                    putExtra("TIME", totalElapsedTime)
+                    putExtra("NUM", question)
                 }
             ok = 0
             startActivity(intent)

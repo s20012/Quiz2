@@ -17,13 +17,10 @@ class Result : AppCompatActivity() {
         setContentView(binding.root)
 
         val answer = intent.getIntExtra("ANSWER", 0)
-        val time = intent.getLongExtra("TIME", 0)
+        val question = intent.getIntExtra("NUM", 0)
 
-        binding.total.text = "$answer / 10"
-        val minutes = time / 10000 / 60
-        val second = minutes / 1000 % 60
-        binding.time.text = "$second:$minutes"
 
+        binding.total.text = "$answer / $question"
 
         binding.backTitle.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
