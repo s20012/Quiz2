@@ -23,15 +23,6 @@ class MainActivity : AppCompatActivity() {
     private val helper = Database(this)
     companion object {
         const val url = "https://script.google.com/macros/s/AKfycbznWpk2m8q6lbLWSS6qaz3uS6j3L4zPwv7CqDEiC433YOgAdaFekGJmjoAO60quMg6l/exec?f=data"
-        var id: String = ""
-        var question: String = "問題文章"
-        var answers: Long = 1
-        var choices1: String = "解答１"
-        var choices2: String = "解答２"
-        var choices3: String = "解答３"
-        var choices4: String = "解答４"
-        var choices5: String = "解答５"
-        var choices6: String = "解答６"
     }
     @SuppressLint("Recycle")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,16 +90,15 @@ class MainActivity : AppCompatActivity() {
 
                 for(i in 0..149) {
                     val name = rootJSON.getJSONObject(i) //問題指定
-                    id = name.getString("id")
-                    question = name.getString("question")
-                    answers = name.getString("answers").toLong()
+                    val question = name.getString("question")
+                    val answers = name.getString("answers").toLong()
                     val choices = name.getJSONArray("choices")
-                    choices1 = choices[0] as String
-                    choices2 = choices[1] as String
-                    choices3 = choices[2] as String
-                    choices4 = choices[3] as String
-                    choices5 = choices[4] as String
-                    choices6 = choices[5] as String
+                    val choices1 = choices[0] as String
+                    val choices2 = choices[1] as String
+                    val choices3 = choices[2] as String
+                    val choices4 = choices[3] as String
+                    val choices5 = choices[4] as String
+                    val choices6 = choices[5] as String
 
                     val sqlInsert = """
                 INSERT INTO Test1 (id, question, answers, choices1, choices2, choices3, choices4, choices5, choices6)

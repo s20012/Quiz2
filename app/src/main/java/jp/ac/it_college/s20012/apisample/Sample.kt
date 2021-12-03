@@ -2,12 +2,11 @@ package jp.ac.it_college.s20012.apisample
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-
 import android.content.Intent
 import android.os.*
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
+import android.widget.CheckBox
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -21,17 +20,18 @@ class Sample : AppCompatActivity() {
     private var startTime = 0L
     private var totalElapsedTime = 0L
     private var question = 0
+    private val list = (0..149).random()
 
     companion object {
         const val TIME_LIMIT = 10000L
         const val TIMER_INTERVAL = 100L
         var count = 0
-        var num = 1
         var ok = 0
-        var ans = ""
+        var note = ""
+        var answers1 = ""
+        var answers2 = ""
         var text = ""
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,35 +40,17 @@ class Sample : AppCompatActivity() {
         setContentView(binding.root)
 
         question = intent.getIntExtra("NUM", 0)
-        readData(num)
+
+
         if(count == 0) {
+            readData(list)
             timeLeftCountdown.start()
         }
             binding.button.setOnClickListener {
-                Log.d("TIME", totalElapsedTime.toString())
-                val id = binding.radioGroup.checkedRadioButtonId
-                if (id == -1) {
-                    Toast.makeText(this ,"ボタンが押されてないよ!", Toast.LENGTH_SHORT).show()
+                if(note == "1") {
+                    radioAnswers()
                 } else {
-                    timeLeftCountdown.cancel()
-                    text = findViewById<RadioButton>(id).text as String
-                    if (text == ans) {
-                        AlertDialog.Builder(this)
-                            .setTitle("正解！")
-                            .setPositiveButton("次へ") { _, _ ->
-                                ok++
-                                next()
-                            }
-                            .show()
-
-                    } else {
-                        AlertDialog.Builder(this)
-                            .setTitle("不正解...")
-                            .setPositiveButton("次へ") { _, _ ->
-                                next()
-                            }
-                            .show()
-                    }
+                    checkAnswers()
                 }
             }
 
@@ -77,34 +59,89 @@ class Sample : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         timeLeftCountdown.cancel()
-
     }
 
+    private fun radioAnswers() {
+        val id = binding.radioGroup.checkedRadioButtonId
+        if (id == -1) {
+            Toast.makeText(this ,"ボタンが押されてないよ!", Toast.LENGTH_SHORT).show()
+        } else {
+            timeLeftCountdown.cancel()
+            text = findViewById<RadioButton>(id).text as String
+            if (text == answers1) {
+                AlertDialog.Builder(this)
+                    .setTitle("正解！")
+                    .setPositiveButton("次へ") { _, _ ->
+                        ok++
+                        next()
+                    }
+                    .show()
+
+            } else {
+                AlertDialog.Builder(this)
+                    .setTitle("不正解...")
+                    .setPositiveButton("次へ") { _, _ ->
+                        next()
+                    }
+                    .show()
+            }
+        }
+    }
+
+    private fun checkAnswers() {
+        val list = arrayListOf<String>()
+        val s = binding.checkGroup.childCount
+        for(i in 0..s) {
+            val v = binding.checkGroup.getChildAt(i)
+            if(v is CheckBox) {
+                if (v.isChecked) list.add(v.text.toString())
+            }
+        }
+        if(list.size > 2 || list.size <= 1) {
+            Toast.makeText(this, "２つ選択してね", Toast.LENGTH_SHORT).show()
+        } else {
+            timeLeftCountdown.cancel()
+            if (answers1 in list && answers2 in list) {
+                AlertDialog.Builder(this)
+                    .setTitle("正解！")
+                    .setPositiveButton("次へ") { _, _ ->
+                        ok++
+                        next()
+                    }
+                    .show()
+            } else {
+                AlertDialog.Builder(this)
+                    .setTitle("不正解...")
+                    .setPositiveButton("次へ") { _, _ ->
+                        next()
+                    }
+                    .show()
+            }
+        }
+    }
 
     //読み込み
     @SuppressLint("Recycle", "SetTextI18n")
-    private fun readData(i: Int) {
-        val dbb = helper.readableDatabase
+    private fun readData(i : Int) {
+        val db = helper.readableDatabase
         val sql = """
                 SELECT * FROM Test1
                 WHERE id = $i
             """.trimIndent()
-        val cursor = dbb.rawQuery(sql, null)
+        val cursor = db.rawQuery(sql, null)
         while (cursor.moveToNext()) {
             val quiz = cursor.let {
                 val index = it.getColumnIndex("question")
                 it.getString(index)
             }
-            val note = cursor.let {
+            note = cursor.let {
                 val index = it.getColumnIndex("answers")
                 it.getString(index)
             }
-
             val correctAnswer1 = cursor.let {
                 val index = it.getColumnIndex("choices1")
                 it.getString(index)
             }
-
             val correctAnswer2 = cursor.let {
                 val index = it.getColumnIndex("choices2")
                 it.getString(index)
@@ -126,50 +163,68 @@ class Sample : AppCompatActivity() {
                 it.getString(index)
             }
 
-            ans = correctAnswer1
+
+            answers1 = correctAnswer1
+            answers2 = correctAnswer2
             binding.textView3.text = "第${count + 1}問"
             binding.textView.text = quiz
 
-            val random1 = listOf(
+            val random1 = mutableListOf(
                 correctAnswer1,
                 correctAnswer2,
                 incorrectAnswer2,
                 incorrectAnswer3
             ).shuffled()
 
-            val random2 = listOf(
+            val random2 = mutableListOf(
                 correctAnswer1,
                 correctAnswer2,
                 incorrectAnswer2,
                 incorrectAnswer3,
                 incorrectAnswer4,
                 incorrectAnswer5
-            ).shuffled()
+            )
+            random2.removeAll(listOf(""))
+            println(random2.size)
+            random2.shuffle()
 
-            when(note) {
+            when (note) {
                 "1" -> {
+                    binding.checkGroup.visibility = View.GONE
+
                     binding.radioA.text = random1[0]
                     binding.radioB.text = random1[1]
                     binding.radioC.text = random1[2]
                     binding.radioD.text = random1[3]
-                    binding.radioE.visibility = View.GONE
-                    binding.radioF.visibility = View.GONE
-
-
                 }
                 else -> {
-                    binding.radioA.text = random2[0]
-                    binding.radioB.text = random2[1]
-                    binding.radioC.text = random2[2]
-                    binding.radioD.text = random2[3]
-                    binding.radioE.text = random2[4]
-                    binding.radioF.text = random2[5]
+                    binding.radioGroup.visibility = View.GONE
+
+                    if(random2.size == 5) {
+                        binding.checkA.text = random2[0]
+                        binding.checkB.text = random2[1]
+                        binding.checkC.text = random2[2]
+                        binding.checkD.text = random2[3]
+                        binding.checkE.text = random2[4]
+
+                        binding.checkF.visibility = View.GONE
+                    } else {
+                        binding.checkF.visibility = View.VISIBLE
+
+                        binding.checkA.text = random2[0]
+                        binding.checkB.text = random2[1]
+                        binding.checkC.text = random2[2]
+                        binding.checkD.text = random2[3]
+                        binding.checkE.text = random2[4]
+                        binding.checkF.text = random2[5]
+                    }
+
+
                 }
             }
         }
 
     }
-
 
     inner class TimeLeftCountdown : CountDownTimer(TIME_LIMIT, TIMER_INTERVAL) {
         override fun onTick(millisUntilFinished: Long) {
@@ -182,7 +237,7 @@ class Sample : AppCompatActivity() {
             AlertDialog.Builder(this@Sample)
                 .setTitle("時間切れ...")
                 .setPositiveButton("次へ") { _, _ ->
-                    readData(num)
+                    readData(list)
                     next()
                 }
                 .show()
@@ -195,7 +250,6 @@ class Sample : AppCompatActivity() {
             anim.start()
         }
     }
-
 
     private fun next() {
         count++
@@ -213,11 +267,18 @@ class Sample : AppCompatActivity() {
         } else {
             timeLeftCountdown.cancel()
             binding.timeLeftBar.progress = 10000
-            num = (0..74).random()
             binding.radioGroup.clearCheck()
-            binding.radioE.visibility = View.VISIBLE
-            binding.radioF.visibility = View.VISIBLE
-            readData(num)
+            val s = binding.checkGroup.childCount
+            for(i in 0..s) {
+                val v = binding.checkGroup.getChildAt(i)
+                if(v is CheckBox) {
+                    if (v.isChecked) v.isChecked = false
+                }
+            }
+            binding.radioGroup.visibility = View.VISIBLE
+            binding.checkGroup.visibility = View.VISIBLE
+
+            readData((0..149).random())
             timeLeftCountdown.start()
             startTime = SystemClock.elapsedRealtime()
         }
