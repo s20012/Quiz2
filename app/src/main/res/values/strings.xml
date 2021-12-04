@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">apiSample</string>
+    <string name="total_text">total</string>
+    <string name="backTitle_button">BackTitle</string>
+    <string name="quizTitle_text">QuizApp</string>
+    <string name="Number_text">questionNumber</string>
+    <string name="next_button">Next</string>
+    <string name="answer_text">answer</string>
+    <string name="questionNumber_text">First question</string>
 </resources>

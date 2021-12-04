@@ -21,16 +21,13 @@ import java.util.concurrent.Executors
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val helper = Database(this)
-    companion object {
-        const val url = "https://script.google.com/macros/s/AKfycbznWpk2m8q6lbLWSS6qaz3uS6j3L4zPwv7CqDEiC433YOgAdaFekGJmjoAO60quMg6l/exec?f=data"
-    }
     @SuppressLint("Recycle")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        communication(url)
+        communication()
 
         binding.numPicker.apply {
             maxValue = 50
@@ -50,15 +47,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     //取得したAPIデータをデータベースに書き込み
-    @SuppressWarnings("SameParameterValue")
-    private fun communication(urlFull: String) {
+    @SuppressWarnings("all")
+    private fun communication() {
         val handler = HandlerCompat.createAsync(mainLooper)
         val executeService = Executors.newSingleThreadExecutor()
 
         //ここは別スレッド
         executeService.submit @WorkerThread {
             var result = ""
-            val url = URL(urlFull)
+            val url = URL("https://script.google.com/macros/s/AKfycbznWpk2m8q6lbLWSS6qaz3uS6j3L4zPwv7CqDEiC433YOgAdaFekGJmjoAO60quMg6l/exec?f=data")
             val con = url.openConnection() as? HttpURLConnection
             con?.let {
                 try {

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">クイズアプリ</string>
+    <string name="total_text">トータル</string>
+    <string name="backTitle_button">タイトルへ</string>
+    <string name="quizTitle_text">クイズアプリ</string>
+    <string name="Number_text">問題数</string>
+    <string name="next_button">次へ</string>
+    <string name="answer_text">答え</string>
+    <string name="questionNumber_text">第一問</string>
 </resources>

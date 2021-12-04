@@ -20,7 +20,6 @@ class Sample : AppCompatActivity() {
     private var startTime = 0L
     private var totalElapsedTime = 0L
     private var question = 0
-    private val list = (0..149).random()
 
     companion object {
         const val TIME_LIMIT = 10000L
@@ -43,9 +42,10 @@ class Sample : AppCompatActivity() {
 
 
         if(count == 0) {
-            readData(list)
+            readData()
             timeLeftCountdown.start()
         }
+
             binding.button.setOnClickListener {
                 if(note == "1") {
                     radioAnswers()
@@ -122,11 +122,11 @@ class Sample : AppCompatActivity() {
 
     //読み込み
     @SuppressLint("Recycle", "SetTextI18n")
-    private fun readData(i : Int) {
+    private fun readData() {
         val db = helper.readableDatabase
         val sql = """
                 SELECT * FROM Test1
-                WHERE id = $i
+                WHERE id = ${(0..149).random()}
             """.trimIndent()
         val cursor = db.rawQuery(sql, null)
         while (cursor.moveToNext()) {
@@ -166,8 +166,8 @@ class Sample : AppCompatActivity() {
 
             answers1 = correctAnswer1
             answers2 = correctAnswer2
-            binding.textView3.text = "第${count + 1}問"
-            binding.textView.text = quiz
+            binding.questionNumber.text = "第${count + 1}問"
+            binding.question.text = quiz
 
             val random1 = mutableListOf(
                 correctAnswer1,
@@ -237,7 +237,7 @@ class Sample : AppCompatActivity() {
             AlertDialog.Builder(this@Sample)
                 .setTitle("時間切れ...")
                 .setPositiveButton("次へ") { _, _ ->
-                    readData(list)
+                    readData()
                     next()
                 }
                 .show()
@@ -278,7 +278,7 @@ class Sample : AppCompatActivity() {
             binding.radioGroup.visibility = View.VISIBLE
             binding.checkGroup.visibility = View.VISIBLE
 
-            readData((0..149).random())
+            readData()
             timeLeftCountdown.start()
             startTime = SystemClock.elapsedRealtime()
         }

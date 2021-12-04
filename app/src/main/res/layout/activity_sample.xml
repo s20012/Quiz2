@@ -7,11 +7,10 @@
     tools:context=".Sample">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/question"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,7 +19,7 @@
         android:id="@+id/button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="次へ"
+        android:text="@string/next_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -32,46 +31,46 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/question">
 
         <RadioButton
             android:id="@+id/radioA"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
-            android:text="RadioButton"
-            tools:ignore="DuplicateClickableBoundsCheck" />
+            android:text="@string/answer_text"
+            tools:ignore="DuplicateClickableBoundsCheck,DuplicateSpeakableTextCheck" />
 
         <RadioButton
             android:id="@+id/radioB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="RadioButton" />
+            android:text="@string/answer_text" />
 
         <RadioButton
             android:id="@+id/radioC"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="RadioButton" />
+            android:text="@string/answer_text" />
 
         <RadioButton
             android:id="@+id/radioD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="RadioButton" />
+            android:text="@string/answer_text" />
 
     </RadioGroup>
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/questionNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="第一問"
+        android:text="@string/questionNumber_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="35sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,9 +84,9 @@
         android:layout_marginBottom="49dp"
         android:max="10000"
         android:progress="10000"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/question"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView3" />
+        app:layout_constraintStart_toEndOf="@+id/questionNumber" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/checkGroup"
@@ -103,7 +102,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
-            android:text="CheckBox"
+            android:text="@string/answer_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -112,7 +111,7 @@
             android:id="@+id/checkB"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="CheckBox"
+            android:text="@string/answer_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/checkA" />
@@ -121,7 +120,7 @@
             android:id="@+id/checkC"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="CheckBox"
+            android:text="@string/answer_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/checkB" />
@@ -130,7 +129,7 @@
             android:id="@+id/checkD"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="CheckBox"
+            android:text="@string/answer_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/checkC" />
@@ -139,7 +138,7 @@
             android:id="@+id/checkE"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="CheckBox"
+            android:text="@string/answer_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -149,7 +148,7 @@
             android:id="@+id/checkF"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="CheckBox"
+            android:text="@string/answer_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
